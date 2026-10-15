@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-15T12:30:25.762109+00:00",
+  "generated_at": "2026-10-15T12:32:26.315938+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735118136",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735385539",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -11,12 +11,12 @@
     "history_weeks": 8
   },
   "current_week": {
-    "deployments": 1,
-    "deploy_attempts": 1,
+    "deployments": 2,
+    "deploy_attempts": 2,
     "failed_deployments": 0,
-    "deployments_per_week": 1.0,
-    "lead_time_hours": 0.07,
-    "lead_time_samples": 1,
+    "deployments_per_week": 2.0,
+    "lead_time_hours": 0.05,
+    "lead_time_samples": 4,
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": 0.0,
@@ -41,17 +41,17 @@
     "partial": false
   },
   "summary": {
-    "deployments": 1,
-    "deploy_attempts": 1,
+    "deployments": 2,
+    "deploy_attempts": 2,
     "failed_deployments": 0,
-    "deployments_per_week": 0.13,
-    "lead_time_hours": 0.07,
-    "lead_time_samples": 1,
+    "deployments_per_week": 0.26,
+    "lead_time_hours": 0.05,
+    "lead_time_samples": 4,
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": 0.0,
     "grades": {
-      "deployments_per_week": "🔴 Low",
+      "deployments_per_week": "🟡 Medium",
       "lead_time_hours": "🟢 Elite",
       "mttr_hours": "—",
       "change_failure_rate": "🟢 Elite"
