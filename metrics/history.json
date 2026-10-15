@@ -1,6 +1,6 @@
 {
   "repository": "oocumu-school/oss-dora",
-  "updated_at": "2026-10-15T12:32:26.315938+00:00",
+  "updated_at": "2026-10-15T12:40:59.808144+00:00",
   "weeks": [
     {
       "deployments": 0,
@@ -108,12 +108,12 @@
       "partial": false
     },
     {
-      "deployments": 2,
-      "deploy_attempts": 2,
+      "deployments": 3,
+      "deploy_attempts": 3,
       "failed_deployments": 0,
-      "deployments_per_week": 2.0,
+      "deployments_per_week": 3.0,
       "lead_time_hours": 0.05,
-      "lead_time_samples": 4,
+      "lead_time_samples": 6,
       "mttr_hours": null,
       "recovery_samples": 0,
       "change_failure_rate": 0.0,

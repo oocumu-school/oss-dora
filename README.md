@@ -52,9 +52,97 @@ main 에 push ─▶ Deploy 워크플로우 (GitHub Pages 배포)   ── 이 �
 > 주 단위는 한국 시간 월요일 00:00 ~ 일요일 23:59입니다. 최근 8주는 실행할 때마다 API에서 다시 계산합니다.
 
 <!-- DORA:START -->
+
 ## 3. 주간 리포트 (자동 생성)
 
-첫 번째 `DORA Metrics` 워크플로우 실행 후 이 구간(지표 표, 그래프, 대시보드 화면, 실행 기록, JSON 아티팩트)이 자동으로 채워집니다.
+> 이 구간(3-1 ~ 3-4)은 `DORA Metrics` 워크플로우가 실행될 때마다 자동으로 다시 작성됩니다.
+
+### 3-1. 이번 주 지표
+
+> 자동 생성: 2026-10-15 21:40 KST · 이번 주: 2026-10-12 ~ (진행 중) · 지난 주: 2026-10-05 ~ 2026-10-11 · [수집 실행 로그](https://github.com/oocumu-school/oss-dora/actions/runs/38736431582)
+
+| 지표 | 이번 주 (진행 중) | 지난 주 | 최근 8주 | 등급 (최근 8주) |
+|---|---:|---:|---:|:---:|
+| 배포 빈도 | 3회 | 0회 | 주 0.4회 | 🟡 Medium |
+| 변경 리드 타임 | 3분 | — | 3분 | 🟢 Elite |
+| 평균 복구 시간 (MTTR) | — | — | — | — |
+| 변경 실패율 | 0.0% | — | 0.0% | 🟢 Elite |
+
+![DORA 지표 추이](docs/dora/dora-chart.png)
+
+<details><summary>주별 기록 펼치기</summary>
+
+| 주 (월요일) | 배포 | 실패 | 리드 타임 | MTTR | 실패율 |
+|---|---:|---:|---:|---:|---:|
+| 2026-10-12 (진행 중) | 3 | 0 | 3분 | — | 0.0% |
+| 2026-10-05 | 0 | 0 | — | — | — |
+| 2026-09-28 | 0 | 0 | — | — | — |
+| 2026-09-21 | 0 | 0 | — | — | — |
+| 2026-09-14 | 0 | 0 | — | — | — |
+| 2026-09-07 | 0 | 0 | — | — | — |
+| 2026-08-31 | 0 | 0 | — | — | — |
+| 2026-08-24 | 0 | 0 | — | — | — |
+
+</details>
+
+### 3-2. 대시보드 화면
+
+실제 페이지: https://oocumu-school.github.io/oss-dora/
+
+![대시보드 화면](docs/dora/dashboard.png)
+
+### 3-3. 워크플로우 실행 결과
+
+`deploy.yml` 최근 실행 3건 (이 기록으로 지표를 계산합니다)
+
+| 실행 | 결과 | 완료 시각 (KST) | 커밋 | 트리거 |
+|---|:---:|---|---|---|
+| [#3](https://github.com/oocumu-school/oss-dora/actions/runs/38736377979) | ✅ 성공 | 10/15 21:40 | `ab0338c` feat: 대시보드 자동 캡처와 실행 기록 추가 | push |
+| [#2](https://github.com/oocumu-school/oss-dora/actions/runs/38735279759) | ✅ 성공 | 10/15 21:32 | `ea31153` chore: 작은 수정 | push |
+| [#1](https://github.com/oocumu-school/oss-dora/actions/runs/38734632351) | ✅ 성공 | 10/15 21:30 | `2362af2` DORA 지표 자동 수집 추가 | push |
+
+### 3-4. JSON 아티팩트
+
+매 실행마다 `latest.json`, `history.json`, 그래프 PNG를 아티팩트로 저장합니다 (보관 90일).
+
+- 이번 실행: **`dora-metrics-4`** → [실행 페이지에서 다운로드](https://github.com/oocumu-school/oss-dora/actions/runs/38736431582)
+
+| 아티팩트 | 크기 | 생성 시각 (KST) |
+|---|---:|---|
+| [`dora-metrics-3`](https://github.com/oocumu-school/oss-dora/actions/runs/38735385539) | 71.6 KB | 10/15 21:32 |
+| [`dora-metrics-2`](https://github.com/oocumu-school/oss-dora/actions/runs/38735118136) | 68.6 KB | 10/15 21:30 |
+| [`dora-metrics-1`](https://github.com/oocumu-school/oss-dora/actions/runs/38734664523) | 70.3 KB | 10/15 21:26 |
+
+같은 내용은 저장소에도 커밋됩니다: [`metrics/latest.json`](metrics/latest.json) · [`metrics/history.json`](metrics/history.json)
+
+<details><summary>latest.json 요약 보기</summary>
+
+```json
+{
+  "generated_at": "2026-10-15T12:40:59.808144+00:00",
+  "repository": "oocumu-school/oss-dora",
+  "summary": {
+    "deployments": 3,
+    "deploy_attempts": 3,
+    "failed_deployments": 0,
+    "deployments_per_week": 0.4,
+    "lead_time_hours": 0.05,
+    "lead_time_samples": 6,
+    "mttr_hours": null,
+    "recovery_samples": 0,
+    "change_failure_rate": 0.0,
+    "grades": {
+      "deployments_per_week": "🟡 Medium",
+      "lead_time_hours": "🟢 Elite",
+      "mttr_hours": "—",
+      "change_failure_rate": "🟢 Elite"
+    }
+  }
+}
+```
+
+</details>
+
 <!-- DORA:END -->
 
 ## 4. 결과 분석

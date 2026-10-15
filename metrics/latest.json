@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-15T12:32:26.315938+00:00",
+  "generated_at": "2026-10-15T12:40:59.808144+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735385539",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38736431582",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -11,12 +11,12 @@
     "history_weeks": 8
   },
   "current_week": {
-    "deployments": 2,
-    "deploy_attempts": 2,
+    "deployments": 3,
+    "deploy_attempts": 3,
     "failed_deployments": 0,
-    "deployments_per_week": 2.0,
+    "deployments_per_week": 3.0,
     "lead_time_hours": 0.05,
-    "lead_time_samples": 4,
+    "lead_time_samples": 6,
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": 0.0,
@@ -41,12 +41,12 @@
     "partial": false
   },
   "summary": {
-    "deployments": 2,
-    "deploy_attempts": 2,
+    "deployments": 3,
+    "deploy_attempts": 3,
     "failed_deployments": 0,
-    "deployments_per_week": 0.26,
+    "deployments_per_week": 0.4,
     "lead_time_hours": 0.05,
-    "lead_time_samples": 4,
+    "lead_time_samples": 6,
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": 0.0,
@@ -63,5 +63,59 @@
     "lead_time": "커밋 작성 시각 → 그 커밋이 포함된 첫 성공 배포 완료 시각 (중앙값)",
     "mttr": "배포 실패 → 다음 성공 배포까지 걸린 시간 + incident 이슈 생성→종료 시간 (평균)",
     "change_failure_rate": "실패한 배포 실행 수 ÷ 전체 배포 시도 수 (cancelled/skipped 제외)"
-  }
+  },
+  "run_number": "4",
+  "dashboard_url": "https://oocumu-school.github.io/oss-dora/",
+  "recent_deploys": [
+    {
+      "number": 3,
+      "conclusion": "success",
+      "sha": "ab0338c969d484a701fe86ede5e3b36f0c0917c9",
+      "title": "feat: 대시보드 자동 캡처와 실행 기록 추가",
+      "event": "push",
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38736377979",
+      "finished": "2026-10-15T12:40:19+00:00"
+    },
+    {
+      "number": 2,
+      "conclusion": "success",
+      "sha": "ea31153baba2062cb649a7ea748259eb1575dedb",
+      "title": "chore: 작은 수정",
+      "event": "push",
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735279759",
+      "finished": "2026-10-15T12:32:09+00:00"
+    },
+    {
+      "number": 1,
+      "conclusion": "success",
+      "sha": "2362af2686e194da94922553ebfe53d274a405fe",
+      "title": "DORA 지표 자동 수집 추가",
+      "event": "push",
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38734632351",
+      "finished": "2026-10-15T12:30:09+00:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "dora-metrics-3",
+      "size": 73347,
+      "created": "2026-10-15T12:32:29+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735385539"
+    },
+    {
+      "name": "dora-metrics-2",
+      "size": 70244,
+      "created": "2026-10-15T12:30:28+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735118136"
+    },
+    {
+      "name": "dora-metrics-1",
+      "size": 71978,
+      "created": "2026-10-15T12:26:57+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38734664523"
+    }
+  ]
 }
