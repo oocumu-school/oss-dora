@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-15T12:26:54.380135+00:00",
+  "generated_at": "2026-10-15T12:30:25.762109+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38734664523",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735118136",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -11,15 +11,15 @@
     "history_weeks": 8
   },
   "current_week": {
-    "deployments": 0,
+    "deployments": 1,
     "deploy_attempts": 1,
-    "failed_deployments": 1,
-    "deployments_per_week": 0.0,
-    "lead_time_hours": null,
-    "lead_time_samples": 0,
+    "failed_deployments": 0,
+    "deployments_per_week": 1.0,
+    "lead_time_hours": 0.07,
+    "lead_time_samples": 1,
     "mttr_hours": null,
     "recovery_samples": 0,
-    "change_failure_rate": 100.0,
+    "change_failure_rate": 0.0,
     "week": "2026-W42",
     "start": "2026-10-12",
     "end": "2026-10-18",
@@ -41,23 +41,23 @@
     "partial": false
   },
   "summary": {
-    "deployments": 0,
+    "deployments": 1,
     "deploy_attempts": 1,
-    "failed_deployments": 1,
-    "deployments_per_week": 0.0,
-    "lead_time_hours": null,
-    "lead_time_samples": 0,
+    "failed_deployments": 0,
+    "deployments_per_week": 0.13,
+    "lead_time_hours": 0.07,
+    "lead_time_samples": 1,
     "mttr_hours": null,
     "recovery_samples": 0,
-    "change_failure_rate": 100.0,
+    "change_failure_rate": 0.0,
     "grades": {
       "deployments_per_week": "🔴 Low",
-      "lead_time_hours": "—",
+      "lead_time_hours": "🟢 Elite",
       "mttr_hours": "—",
-      "change_failure_rate": "🔴 Low"
+      "change_failure_rate": "🟢 Elite"
     }
   },
-  "open_failure_since": "2026-10-15T12:26:35+00:00",
+  "open_failure_since": null,
   "definitions": {
     "deployment_frequency": "집계 기간 동안 성공한 배포 워크플로우 실행 수 (주당 평균)",
     "lead_time": "커밋 작성 시각 → 그 커밋이 포함된 첫 성공 배포 완료 시각 (중앙값)",
