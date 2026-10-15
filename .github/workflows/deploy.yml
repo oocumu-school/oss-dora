@@ -1,0 +1,60 @@
+# 배포 워크플로우 (DORA 지표의 "배포" 기준이 되는 워크플로우)
+# - main 에 push 할 때마다 GitHub Pages 로 대시보드를 배포한다.
+# - 수동 실행 시 simulate_failure 를 켜면 일부러 실패시켜 변경 실패율/MTTR 데이터를 만들 수 있다.
+# 이미 다른 배포 워크플로우가 있다면 이 파일 대신 그 파일명을 dora-metrics.yml 의 DEPLOY_WORKFLOW 에 적으면 된다.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: "배포 실패 시뮬레이션 (CFR / MTTR 테스트용)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 기본 검증
+        run: |
+          test -f dashboard/index.html
+          for f in metrics/*.json; do
+            [ -e "$f" ] && python3 -c "import json,sys; json.load(open(sys.argv[1], encoding='utf-8'))" "$f"
+          done
+          echo "검증 통과"
+
+      - name: 배포 실패 시뮬레이션
+        if: ${{ inputs.simulate_failure }}
+        run: |
+          echo "::error::simulate_failure=true 로 실행되어 의도적으로 배포를 실패시킵니다."
+          exit 1
+
+      - name: 사이트 구성 (_site)
+        run: |
+          mkdir -p _site/metrics
+          cp dashboard/index.html _site/index.html
+          cp metrics/*.json _site/metrics/ 2>/dev/null || echo "아직 metrics 없음 (첫 배포)"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,85 @@
+# DORA 4대 지표 자동 수집
+# 실행 시점
+#   - 매주 월요일 00:05 KST : 지난 주(월~일) 확정 리포트
+#   - Deploy 워크플로우가 끝날 때마다 : 이번 주(진행 중) 값 갱신
+#   - Actions 탭에서 수동 실행
+# 결과
+#   - JSON 아티팩트(dora-metrics-<번호>) 업로드
+#   - metrics/*.json, docs/dora/dora-chart.png, README.md 의 리포트 구간을 커밋
+name: DORA Metrics
+
+on:
+  schedule:
+    - cron: "5 15 * * 0"        # UTC 일요일 15:05 = KST 월요일 00:05
+  workflow_run:
+    workflows: ["Deploy"]       # deploy.yml 의 name 과 같아야 함
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      history_weeks:
+        description: "다시 계산할 주 수"
+        default: "8"
+
+permissions:
+  contents: write   # README / metrics 커밋
+  actions: read     # 워크플로우 실행 기록 조회
+  issues: read      # incident 라벨 이슈 조회
+
+concurrency:
+  group: dora-metrics
+  cancel-in-progress: false
+
+env:
+  DEPLOY_WORKFLOW: deploy.yml   # 배포로 볼 워크플로우 파일명
+  DEPLOY_BRANCH: main
+  INCIDENT_LABEL: incident
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 그래프 라이브러리 설치
+        run: pip install matplotlib
+
+      - name: DORA 지표 계산
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HISTORY_WEEKS: ${{ inputs.history_weeks || '8' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python scripts/collect_dora.py
+
+      - name: JSON 아티팩트 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: dora-metrics-${{ github.run_number }}
+          path: |
+            metrics/latest.json
+            metrics/history.json
+            docs/dora/dora-chart.png
+          retention-days: 90
+
+      - name: 실행 요약에 리포트 표시
+        run: |
+          sed -n '/<!-- DORA:START -->/,/<!-- DORA:END -->/p' README.md \
+            | grep -v -e 'DORA:START' -e 'DORA:END' -e '!\[' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: README / metrics 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md metrics docs/dora
+          if git diff --cached --quiet; then
+            echo "변경 사항 없음"
+            exit 0
+          fi
+          git commit -m "chore(dora): 주간 지표 갱신 $(TZ=Asia/Seoul date +%Y-%m-%d)"
+          git pull --rebase origin "${{ github.event.repository.default_branch }}"
+          git push
