@@ -110,6 +110,9 @@ class GitHub:
                 "conclusion": r["conclusion"],
                 "finished": parse_ts(r["updated_at"]),
                 "url": r["html_url"],
+                "number": r.get("run_number"),
+                "title": r.get("display_title") or "",
+                "event": r.get("event", ""),
             }
             for r in raw
             if r.get("conclusion") in ("success", "failure")  # cancelled/skipped 은 배포 시도로 보지 않음
@@ -125,6 +128,24 @@ class GitHub:
             return []  # 같은 커밋 재배포: 새 변경 없음
         data = self.get(f"/compare/{base_sha}...{head_sha}")
         return [parse_ts(c["commit"]["author"]["date"]) for c in data.get("commits", [])]
+
+    def artifacts(self, prefix: str) -> list[dict]:
+        """이전 실행들이 남긴 JSON 아티팩트 목록 (최신순)."""
+        server = env("GITHUB_SERVER_URL", "https://github.com")
+        raw = self.paginate("/actions/artifacts", {}, key="artifacts", max_pages=2)
+        out = []
+        for a in raw:
+            if not a["name"].startswith(prefix):
+                continue
+            run_id = (a.get("workflow_run") or {}).get("id")
+            out.append({
+                "name": a["name"],
+                "size": a.get("size_in_bytes", 0),
+                "created": parse_ts(a["created_at"]),
+                "expired": a.get("expired", False),
+                "url": f"{server}/{self.repo}/actions/runs/{run_id}" if run_id else "",
+            })
+        return sorted(out, key=lambda a: a["created"], reverse=True)
 
     def incidents(self, label: str, since: datetime) -> list[dict]:
         raw = self.paginate("/issues", {"labels": label, "state": "all", "since": since.isoformat()}, max_pages=5)
@@ -159,7 +180,8 @@ class DemoGitHub:
             self._commits[sha] = [t - timedelta(hours=self.rng.uniform(0.5, 30)) for _ in range(self.rng.randint(1, 4))]
             failed = self.rng.random() < 0.18
             self._runs.append({"id": n, "sha": sha, "conclusion": "failure" if failed else "success",
-                               "finished": t, "url": "https://github.com/demo/demo/actions"})
+                               "finished": t, "url": "https://github.com/demo/demo/actions",
+                               "number": n, "title": f"데모 변경 #{n}", "event": "push"})
 
     def deploy_runs(self, workflow, branch, since):
         return [r for r in self._runs if r["finished"] >= since]
@@ -177,6 +199,11 @@ class DemoGitHub:
 
     def incidents(self, label, since):
         return []
+
+    def artifacts(self, prefix):
+        now = datetime.now(timezone.utc)
+        return [{"name": f"{prefix}{20 - i}", "size": 4200 + i * 37, "created": now - timedelta(days=i),
+                 "expired": False, "url": "https://github.com/demo/demo/actions"} for i in range(1, 6)]
 
 
 # ---------------------------------------------------------------------------
@@ -368,7 +395,9 @@ def render_readme_section(latest: dict, history: list[dict], chart_rel: str | No
     ]
     gen = parse_ts(latest["generated_at"]).astimezone(KST).strftime("%Y-%m-%d %H:%M KST")
     n = latest["config"]["history_weeks"]
-    out = [MARK_START, "", "## 3. 주간 리포트 (자동 생성)", ""]
+    out = [MARK_START, "", "## 3. 주간 리포트 (자동 생성)", "",
+           "> 이 구간(3-1 ~ 3-4)은 `DORA Metrics` 워크플로우가 실행될 때마다 자동으로 다시 작성됩니다.", "",
+           "### 3-1. 이번 주 지표", ""]
     if demo:
         out += ["> ⚠️ **데모 데이터입니다.** 실제 저장소 기록이 아닙니다.", ""]
     run = f" · [수집 실행 로그]({latest['run_url']})" if latest.get("run_url") else ""
@@ -396,9 +425,52 @@ def render_readme_section(latest: dict, history: list[dict], chart_rel: str | No
         out.append(f"| {w['start']}{tag} | {w['deployments']} | {w['failed_deployments']} | "
                    f"{fmt_hours(w['lead_time_hours'])} | {fmt_hours(w['mttr_hours'])} | "
                    f"{fmt_pct(w['change_failure_rate'])} |")
-    out += ["", "</details>", "",
-            "원본 데이터: [`metrics/latest.json`](metrics/latest.json) · "
-            "[`metrics/history.json`](metrics/history.json)", "", MARK_END]
+    out += ["", "</details>", ""]
+
+    # 3-2. 대시보드 화면 (워크플로우가 Playwright 로 캡처)
+    out += ["### 3-2. 대시보드 화면", ""]
+    if latest.get("dashboard_url"):
+        out += [f"실제 페이지: {latest['dashboard_url']}", ""]
+    out += ["![대시보드 화면](docs/dora/dashboard.png)", ""]
+
+    # 3-3. 워크플로우 실행 결과
+    deploys = latest.get("recent_deploys", [])
+    out += ["### 3-3. 워크플로우 실행 결과", "",
+            f"`{latest['config']['deploy_workflow']}` 최근 실행 {len(deploys)}건 "
+            "(이 기록으로 지표를 계산합니다)", "",
+            "| 실행 | 결과 | 완료 시각 (KST) | 커밋 | 트리거 |",
+            "|---|:---:|---|---|---|"]
+    for d in deploys:
+        icon = "✅ 성공" if d["conclusion"] == "success" else "❌ 실패"
+        when = parse_ts(d["finished"]).astimezone(KST).strftime("%m/%d %H:%M")
+        title = d["title"].replace("|", "\\|")[:40]
+        out.append(f"| [#{d['number']}]({d['url']}) | {icon} | {when} | `{d['sha'][:7]}` {title} | {d['event']} |")
+    if not deploys:
+        out.append("| — | — | — | — | — |")
+    out.append("")
+
+    # 3-4. JSON 아티팩트
+    arts = latest.get("artifacts", [])
+    out += ["### 3-4. JSON 아티팩트", "",
+            "매 실행마다 `latest.json`, `history.json`, 그래프 PNG를 아티팩트로 저장합니다 (보관 90일).", ""]
+    if latest.get("run_number"):
+        out += [f"- 이번 실행: **`dora-metrics-{latest['run_number']}`** → [실행 페이지에서 다운로드]({latest['run_url']})", ""]
+    out += ["| 아티팩트 | 크기 | 생성 시각 (KST) |", "|---|---:|---|"]
+    for a in arts[:8]:
+        when = parse_ts(a["created"]).astimezone(KST).strftime("%m/%d %H:%M")
+        name = f"[`{a['name']}`]({a['url']})" if a["url"] else f"`{a['name']}`"
+        if a["expired"]:
+            name += " (만료)"
+        out.append(f"| {name} | {a['size'] / 1024:.1f} KB | {when} |")
+    if not arts:
+        out.append("| (이전 아티팩트 없음) | — | — |")
+    out += ["",
+            "같은 내용은 저장소에도 커밋됩니다: [`metrics/latest.json`](metrics/latest.json) · "
+            "[`metrics/history.json`](metrics/history.json)", "",
+            "<details><summary>latest.json 요약 보기</summary>", "", "```json",
+            json.dumps({k: latest[k] for k in ("generated_at", "repository", "summary")},
+                       ensure_ascii=False, indent=2),
+            "```", "", "</details>", "", MARK_END]
     return "\n".join(out)
 
 
@@ -478,7 +550,20 @@ def main() -> int:
         "summary": summary,
         "open_failure_since": samples["open_failure_since"].isoformat() if samples["open_failure_since"] else None,
         "definitions": DEFINITIONS,
+        "run_number": env("RUN_NUMBER"),
+        "dashboard_url": env("DASHBOARD_URL"),
+        "recent_deploys": [
+            {**{k: r[k] for k in ("number", "conclusion", "sha", "title", "event", "url")},
+             "finished": r["finished"].isoformat()}
+            for r in reversed(samples["runs"][-10:])
+        ],
+        "artifacts": [],
     }
+    try:
+        latest["artifacts"] = [{**a, "created": a["created"].isoformat()}
+                               for a in gh.artifacts("dora-metrics-")[:8]]
+    except RuntimeError as e:
+        print(f"[경고] 아티팩트 목록 조회 실패 - 표를 비워 둡니다.\n{e}")
 
     def dump(p: Path, obj) -> None:
         p.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")

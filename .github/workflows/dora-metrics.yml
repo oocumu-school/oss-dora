@@ -5,7 +5,7 @@
 #   - Actions 탭에서 수동 실행
 # 결과
 #   - JSON 아티팩트(dora-metrics-<번호>) 업로드
-#   - metrics/*.json, docs/dora/dora-chart.png, README.md 의 리포트 구간을 커밋
+#   - metrics/*.json, docs/dora/*.png(그래프·대시보드 캡처), README.md 의 리포트 구간을 커밋
 name: DORA Metrics
 
 on:
@@ -46,15 +46,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: 그래프 라이브러리 설치
-        run: pip install matplotlib
+      - name: 그래프·캡처 도구 설치
+        run: |
+          pip install matplotlib playwright
+          python -m playwright install --with-deps chromium
+          sudo apt-get install -y fonts-noto-cjk   # 대시보드 캡처의 한글 글꼴
 
       - name: DORA 지표 계산
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HISTORY_WEEKS: ${{ inputs.history_weeks || '8' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          RUN_NUMBER: ${{ github.run_number }}
+          DASHBOARD_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
         run: python scripts/collect_dora.py
+
+      - name: 대시보드 화면 캡처
+        continue-on-error: true   # 캡처가 실패해도 리포트 갱신은 계속
+        run: python scripts/screenshot_dashboard.py
 
       - name: JSON 아티팩트 업로드
         uses: actions/upload-artifact@v4
@@ -64,7 +73,9 @@ jobs:
             metrics/latest.json
             metrics/history.json
             docs/dora/dora-chart.png
+            docs/dora/dashboard.png
           retention-days: 90
+          if-no-files-found: warn
 
       - name: 실행 요약에 리포트 표시
         run: |
