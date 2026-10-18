@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-10-15T12:40:59.808144+00:00",
+  "generated_at": "2026-10-18T18:01:56.004280+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/38736431582",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/39152214930",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -11,6 +11,21 @@
     "history_weeks": 8
   },
   "current_week": {
+    "deployments": 0,
+    "deploy_attempts": 0,
+    "failed_deployments": 0,
+    "deployments_per_week": 0.0,
+    "lead_time_hours": null,
+    "lead_time_samples": 0,
+    "mttr_hours": null,
+    "recovery_samples": 0,
+    "change_failure_rate": null,
+    "week": "2026-W43",
+    "start": "2026-10-19",
+    "end": "2026-10-25",
+    "partial": true
+  },
+  "last_week": {
     "deployments": 3,
     "deploy_attempts": 3,
     "failed_deployments": 0,
@@ -23,28 +38,13 @@
     "week": "2026-W42",
     "start": "2026-10-12",
     "end": "2026-10-18",
-    "partial": true
-  },
-  "last_week": {
-    "deployments": 0,
-    "deploy_attempts": 0,
-    "failed_deployments": 0,
-    "deployments_per_week": 0.0,
-    "lead_time_hours": null,
-    "lead_time_samples": 0,
-    "mttr_hours": null,
-    "recovery_samples": 0,
-    "change_failure_rate": null,
-    "week": "2026-W41",
-    "start": "2026-10-05",
-    "end": "2026-10-11",
     "partial": false
   },
   "summary": {
     "deployments": 3,
     "deploy_attempts": 3,
     "failed_deployments": 0,
-    "deployments_per_week": 0.4,
+    "deployments_per_week": 0.43,
     "lead_time_hours": 0.05,
     "lead_time_samples": 6,
     "mttr_hours": null,
@@ -64,7 +64,7 @@
     "mttr": "배포 실패 → 다음 성공 배포까지 걸린 시간 + incident 이슈 생성→종료 시간 (평균)",
     "change_failure_rate": "실패한 배포 실행 수 ÷ 전체 배포 시도 수 (cancelled/skipped 제외)"
   },
-  "run_number": "4",
+  "run_number": "5",
   "dashboard_url": "https://oocumu-school.github.io/oss-dora/",
   "recent_deploys": [
     {
@@ -96,6 +96,13 @@
     }
   ],
   "artifacts": [
+    {
+      "name": "dora-metrics-4",
+      "size": 146305,
+      "created": "2026-10-15T12:41:07+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38736431582"
+    },
     {
       "name": "dora-metrics-3",
       "size": 73347,
