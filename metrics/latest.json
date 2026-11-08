@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-01T19:32:32.189300+00:00",
+  "generated_at": "2026-11-08T19:31:17.867279+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/41342192124",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/42515410134",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -20,9 +20,9 @@
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": null,
-    "week": "2026-W45",
-    "start": "2026-11-02",
-    "end": "2026-11-08",
+    "week": "2026-W46",
+    "start": "2026-11-09",
+    "end": "2026-11-15",
     "partial": true
   },
   "last_week": {
@@ -35,9 +35,9 @@
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": null,
-    "week": "2026-W44",
-    "start": "2026-10-26",
-    "end": "2026-11-01",
+    "week": "2026-W45",
+    "start": "2026-11-02",
+    "end": "2026-11-08",
     "partial": false
   },
   "summary": {
@@ -64,7 +64,7 @@
     "mttr": "배포 실패 → 다음 성공 배포까지 걸린 시간 + incident 이슈 생성→종료 시간 (평균)",
     "change_failure_rate": "실패한 배포 실행 수 ÷ 전체 배포 시도 수 (cancelled/skipped 제외)"
   },
-  "run_number": "7",
+  "run_number": "8",
   "dashboard_url": "https://oocumu-school.github.io/oss-dora/",
   "recent_deploys": [
     {
@@ -96,6 +96,13 @@
     }
   ],
   "artifacts": [
+    {
+      "name": "dora-metrics-7",
+      "size": 146658,
+      "created": "2026-11-01T19:32:41+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/41342192124"
+    },
     {
       "name": "dora-metrics-6",
       "size": 147185,
