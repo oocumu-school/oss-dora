@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-11-15T20:19:55.537997+00:00",
+  "generated_at": "2026-11-22T21:00:34.873963+00:00",
   "repository": "oocumu-school/oss-dora",
   "demo": false,
-  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/43757377430",
+  "run_url": "https://github.com/oocumu-school/oss-dora/actions/runs/45069528182",
   "config": {
     "repo": "oocumu-school/oss-dora",
     "deploy_workflow": "deploy.yml",
@@ -20,9 +20,9 @@
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": null,
-    "week": "2026-W47",
-    "start": "2026-11-16",
-    "end": "2026-11-22",
+    "week": "2026-W48",
+    "start": "2026-11-23",
+    "end": "2026-11-29",
     "partial": true
   },
   "last_week": {
@@ -35,9 +35,9 @@
     "mttr_hours": null,
     "recovery_samples": 0,
     "change_failure_rate": null,
-    "week": "2026-W46",
-    "start": "2026-11-09",
-    "end": "2026-11-15",
+    "week": "2026-W47",
+    "start": "2026-11-16",
+    "end": "2026-11-22",
     "partial": false
   },
   "summary": {
@@ -64,7 +64,7 @@
     "mttr": "배포 실패 → 다음 성공 배포까지 걸린 시간 + incident 이슈 생성→종료 시간 (평균)",
     "change_failure_rate": "실패한 배포 실행 수 ÷ 전체 배포 시도 수 (cancelled/skipped 제외)"
   },
-  "run_number": "9",
+  "run_number": "10",
   "dashboard_url": "https://oocumu-school.github.io/oss-dora/",
   "recent_deploys": [
     {
@@ -96,6 +96,13 @@
     }
   ],
   "artifacts": [
+    {
+      "name": "dora-metrics-9",
+      "size": 145367,
+      "created": "2026-11-15T20:20:06+00:00",
+      "expired": false,
+      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/43757377430"
+    },
     {
       "name": "dora-metrics-8",
       "size": 146517,
@@ -144,13 +151,6 @@
       "created": "2026-10-15T12:30:28+00:00",
       "expired": false,
       "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38735118136"
-    },
-    {
-      "name": "dora-metrics-1",
-      "size": 71978,
-      "created": "2026-10-15T12:26:57+00:00",
-      "expired": false,
-      "url": "https://github.com/oocumu-school/oss-dora/actions/runs/38734664523"
     }
   ]
 }
